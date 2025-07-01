@@ -234,7 +234,7 @@ class HFExaoneImporter(io.ModelConnector["ExaoneForCausalLM", ExaoneModel]):
         """
         mapping = {
             "transformer.wte.weight": "embedding.word_embeddings.weight",
-            "transformer.h.*.attn.attention.o_proj.weight": "decoder.layers.*.self_attention.linear_proj.weight",
+            "transformer.h.*.attn.attention.out_proj.weight": "decoder.layers.*.self_attention.linear_proj.weight",
             "transformer.h.*.ln_1.weight": "decoder.layers.*.self_attention.linear_qkv.layer_norm_weight",
             "transformer.ln_f.weight": "decoder.final_layernorm.weight",
             "lm_head.weight": "output_layer.weight",

@@ -345,7 +345,7 @@ class GPTConfig(TransformerConfig, io.IOMixin):
 
         # During fake lightning initialization, pass 0 to bypass the assertion that vp_stage must be
         # non-None when using virtual pipeline model parallelism
-        vp_stage = vp_stage or 0
+        vp_stage = vp_stage #or 0
 
         transformer_layer_spec = self.transformer_layer_spec
         if not isinstance(transformer_layer_spec, ModuleSpec):
