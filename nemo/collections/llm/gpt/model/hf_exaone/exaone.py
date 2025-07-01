@@ -194,7 +194,7 @@ class HFExaoneImporter(io.ModelConnector["ExaoneForCausalLM", ExaoneModel]):
         """
         return ExaoneModel(self.config, tokenizer=self.tokenizer)
 
-    def apply(self, output_path: Path) -> Path:
+    def apply(self, output_path: Path, hf_cache_dir=None) -> Path:
         """Apply the conversion from HF to NeMo format.
 
         Args:
@@ -205,7 +205,7 @@ class HFExaoneImporter(io.ModelConnector["ExaoneForCausalLM", ExaoneModel]):
         """
         from transformers import AutoConfig, AutoModelForCausalLM
     
-        source = AutoModelForCausalLM.from_pretrained(str(self), torch_dtype='auto', trust_remote_code=True)
+        source = AutoModelForCausalLM.from_pretrained(str(self), torch_dtype='auto', trust_remote_code=True, cache_dir=hf_cache_dir)
 
         target = self.init()
         trainer = self.nemo_setup(target)
@@ -381,13 +381,9 @@ class HFExaoneExporter(io.ModelConnector[ExaoneModel, "ExaoneForCausalLM"]):
         Returns:
             Path: Path to the saved HF model
         """
-        if self.is_llama4():
-            # We need to modify the state dict before conversion for Llama4
-            # Load dist checkpoint directly
-            source, source_config = self.ckpt_load(self)
-        else:
-            source, _ = self.nemo_load(str(self))
-            source_config = source.config
+        
+        source, _ = self.nemo_load(str(self))
+        source_config = source.config
         target = self.init(torch_dtype_from_mcore_config(source_config))
         target = self.convert_state(source, target, source_config)
 
