@@ -205,7 +205,7 @@ class HFExaoneImporter(io.ModelConnector["ExaoneForCausalLM", ExaoneModel]):
         """
         from transformers import AutoConfig, AutoModelForCausalLM
     
-        source = AutoModelForCausalLM.from_pretrained(str(self), torch_dtype='auto')
+        source = AutoModelForCausalLM.from_pretrained(str(self), torch_dtype='auto', trust_remote_code=True)
 
         target = self.init()
         trainer = self.nemo_setup(target)
@@ -299,9 +299,9 @@ class HFExaoneImporter(io.ModelConnector["ExaoneForCausalLM", ExaoneModel]):
         """
         from transformers import AutoConfig, GenerationConfig
 
-        source = AutoConfig.from_pretrained(str(self))
+        source = AutoConfig.from_pretrained(str(self), trust_remote_code=True)
         try:
-            generation_config = GenerationConfig.from_pretrained(str(self))
+            generation_config = GenerationConfig.from_pretrained(str(self), trust_remote_code=True)
         except Exception:
             generation_config = None
 
