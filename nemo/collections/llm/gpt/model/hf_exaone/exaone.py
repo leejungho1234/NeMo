@@ -330,7 +330,7 @@ class HFExaoneImporter(io.ModelConnector["ExaoneForCausalLM", ExaoneModel]):
             ),
             num_attention_heads=source.num_attention_heads,
             init_method_std=source.initializer_range,
-            layernorm_epsilon=source.rms_norm_eps,
+            layernorm_epsilon=source.layer_norm_epsilon,
             num_query_groups=source.num_key_value_heads,
             seq_length=source.max_position_embeddings,
             rotary_base=source.rope_theta,
@@ -839,5 +839,5 @@ __all__ = [
 
 
 if __name__ == '__main__':
-    m = HFExaoneImporter('LGAI-EXAONE/EXAONE-3.5-7.8B-Instruct')
+    model = HFExaoneImporter('LGAI-EXAONE/EXAONE-3.5-7.8B-Instruct')
     breakpoint()
