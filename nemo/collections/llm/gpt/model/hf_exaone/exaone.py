@@ -839,5 +839,5 @@ __all__ = [
 
 
 if __name__ == '__main__':
-    m = HFExaoneImporter()
+    m = HFExaoneImporter('LGAI-EXAONE/EXAONE-3.5-7.8B-Instruct')
     breakpoint()
