@@ -836,4 +836,5 @@ __all__ = [
 
 if __name__ == '__main__':
     model = HFExaoneImporter('LGAI-EXAONE/EXAONE-3.5-7.8B-Instruct')
+    model.apply(output_path='/data/public/ljh/nemo_test_weight', hf_cache_dir='/data/public/98_model')
     breakpoint()
