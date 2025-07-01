@@ -374,27 +374,47 @@ class GPTConfig(TransformerConfig, io.IOMixin):
         else:
             kwargs = {}
         with model_init_device_context():
-            model = MCoreGPTModel(
-                self,
-                transformer_layer_spec=transformer_layer_spec,
-                vocab_size=vocab_size,
-                max_sequence_length=self.seq_length,
-                fp16_lm_cross_entropy=self.fp16_lm_cross_entropy,
-                parallel_output=self.parallel_output,
-                share_embeddings_and_output_weights=self.share_embeddings_and_output_weights,
-                position_embedding_type=self.position_embedding_type,
-                rotary_percent=self.rotary_percent,
-                rotary_base=self.rotary_base,
-                seq_len_interpolation_factor=self.seq_len_interpolation_factor,
-                pre_process=pre_process
-                or parallel_state.is_pipeline_first_stage(ignore_virtual=False, vp_stage=vp_stage),
-                post_process=post_process
-                or parallel_state.is_pipeline_last_stage(ignore_virtual=False, vp_stage=vp_stage),
-                scatter_embedding_sequence_parallel=self.scatter_embedding_sequence_parallel,
-                vp_stage=vp_stage,
-                **kwargs,
-            )
-
+            if vp_stage is not None:
+                model = MCoreGPTModel(
+                    self,
+                    transformer_layer_spec=transformer_layer_spec,
+                    vocab_size=vocab_size,
+                    max_sequence_length=self.seq_length,
+                    fp16_lm_cross_entropy=self.fp16_lm_cross_entropy,
+                    parallel_output=self.parallel_output,
+                    share_embeddings_and_output_weights=self.share_embeddings_and_output_weights,
+                    position_embedding_type=self.position_embedding_type,
+                    rotary_percent=self.rotary_percent,
+                    rotary_base=self.rotary_base,
+                    seq_len_interpolation_factor=self.seq_len_interpolation_factor,
+                    pre_process=pre_process
+                    or parallel_state.is_pipeline_first_stage(ignore_virtual=False, vp_stage=vp_stage),
+                    post_process=post_process
+                    or parallel_state.is_pipeline_last_stage(ignore_virtual=False, vp_stage=vp_stage),
+                    scatter_embedding_sequence_parallel=self.scatter_embedding_sequence_parallel,
+                    vp_stage=vp_stage,
+                    **kwargs,
+                )
+            else:
+                model = MCoreGPTModel(
+                    self,
+                    transformer_layer_spec=transformer_layer_spec,
+                    vocab_size=vocab_size,
+                    max_sequence_length=self.seq_length,
+                    fp16_lm_cross_entropy=self.fp16_lm_cross_entropy,
+                    parallel_output=self.parallel_output,
+                    share_embeddings_and_output_weights=self.share_embeddings_and_output_weights,
+                    position_embedding_type=self.position_embedding_type,
+                    rotary_percent=self.rotary_percent,
+                    rotary_base=self.rotary_base,
+                    seq_len_interpolation_factor=self.seq_len_interpolation_factor,
+                    pre_process=pre_process
+                    or parallel_state.is_pipeline_first_stage(ignore_virtual=False),
+                    post_process=post_process
+                    or parallel_state.is_pipeline_last_stage(ignore_virtual=False),
+                    scatter_embedding_sequence_parallel=self.scatter_embedding_sequence_parallel,
+                    **kwargs,
+                )
         # If using full TE layer, need to set TP, CP group since the module call
         # is not routed through megatron core, which normally handles passing the
         # TP, CP group to the TE modules.
