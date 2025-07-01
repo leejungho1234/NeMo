@@ -1,1 +1,1 @@
-from exaone import *
+from .exaone import *
